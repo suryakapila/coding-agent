@@ -1,5 +1,7 @@
 import os
 import subprocess
+from google import genai
+from google.genai import types
 
 def run_python_file(working_directory, file_path, args=None):
     try:
@@ -30,12 +32,34 @@ def run_python_file(working_directory, file_path, args=None):
             output.append(f'Process exited with code {result.returncode}')
         if not result.stdout and not result.stderr:
             output.append('No output was produced')
-        if result.stdout and not result.stderr:
-            output.append(f'STDOUT:{result.stdout.strip()}')
-        if result.stderr and not result.stdout:
-            output.append(f'STDERR:{result.stderr.strip()}')
+        if result.stdout:
+            # output.append(f'STDOUT:{result.stdout.strip()}')
+            return f"STDOUT: {result.stdout.strip()}"
+        if result.stderr:
+            #output.append(f'STDERR:{result.stderr.strip()}')
+            return f"STDERR: {result.stderr.strip()}"
         return "\n".join(output)
     except Exception as e:
         return f"Error: executing Python file: {e}"
+    
+
+schema_run_python_file_info = types.FunctionDeclaration(
+    name="run_python_file",
+    description="Runs a Python file in the working directory with optional arguments",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="Path to the Python file to run, relative to the working directory",
+            ),
+            "args": types.Schema(
+                type=types.Type.ARRAY,
+                description="Optional list of arguments to pass to the Python file",
+                items=types.Schema(type=types.Type.STRING),
+            ),
+        },
+    ),
+)
     
         
