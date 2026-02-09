@@ -6,6 +6,15 @@ dist/
 wheels/
 *.egg-info
 
+#lock files
+pip-log.txt
+pip-delete-this-directory.txt
+*.lock
+
+*.TAG
+
+
+
 # Virtual environments
 .venv
 
